@@ -8,14 +8,16 @@ const film = document.getElementById('film');
 const movieSelectBox = document.getElementById('movie');
 
 
- // current price
+ // current price:
  let ticketPriceFromSelectBox = parseFloat(movieSelectBox.options[movieSelectBox.selectedIndex].value);
  let ticketPriceFromStorage = parseFloat(localStorage.getItem("selectedMoviePrice"));
  let currentTicketPrice = ticketPriceFromStorage ? ticketPriceFromStorage : ticketPriceFromSelectBox;
+
 // current selectedMovieIndex
  let selectedMovieIndexFromSelectBox = movieSelectBox.selectedIndex;
  let selectedMovieIndexFromStorage = localStorage.getItem('selectedMovieIndex');
  let currentMovieIndex = selectedMovieIndexFromStorage ? selectedMovieIndexFromStorage : selectedMovieIndexFromSelectBox;
+
 // Initialize functions
 window.onload = () => {
 
@@ -28,7 +30,7 @@ window.onload = () => {
 }
 
 // Movie select event
-movieSelectBox.addEventListener('change', e => {
+movieSelectBox.addEventListener('input', e => {
   let ticketPrice = e.target.value;
   let seatNumber = e.target.selectedIndex;
   updateMovieInfo(ticketPrice);
@@ -37,6 +39,11 @@ movieSelectBox.addEventListener('change', e => {
 
 // Seat click event(capturing)
 container.addEventListener('click', e => {
+  ticketPriceFromSelectBox = parseFloat(movieSelectBox.options[movieSelectBox.selectedIndex].value);
+  ticketPriceFromStorage = parseFloat(localStorage.getItem("selectedMoviePrice"));
+  currentTicketPrice = ticketPriceFromStorage ? ticketPriceFromStorage : ticketPriceFromSelectBox;
+  // eger yukaridaki 3 satiri bu func icine yazmazsak calismiyor
+  
   if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
     e.target.classList.toggle('selected');
     //storage daki son filmin price ı update fonk parametre olarak veriliyor.
@@ -47,8 +54,8 @@ container.addEventListener('click', e => {
 // Update total and count
 const updateMovieInfo = (price) => {
   // movieSelectBox.selectedIndex = currentMovieIndex;
-  // .class .class matches any elements of class .class that are descendants of another element with the class .class.
-  // .class.class matches any element with both classes.
+  // .class .class matches any elements of class .class that are descendants of another element with the class .class. ( arada bosluk birakilirsa child element olur ve ikinci yazilan cocuk olur. ve de o secilmis olur)
+  // .class.class matches any element with both classes. (burada ise parent iliskisi olmaz. iki sinif birden secilmis olur)
   const selectedSeats = document.querySelectorAll('.row .seat.selected');
 
   //Array.prototype.forEach()
@@ -58,6 +65,7 @@ const updateMovieInfo = (price) => {
   //Array.prototype.reduce()
 
   //selected koltuklara index atama, sonra array a alma
+
   console.log(Array.from(selectedSeats));
   const seatsIndexArray = [...selectedSeats].map(seat => [...allSeats].indexOf(seat));
 
@@ -85,7 +93,7 @@ const displayUI = () => {
       // selectedSeats.indexOf(index) == -1 ==> false
       // selectedSeats.indexOf(index) > -1 ==> true
       // occupied olmayanların indexi localstorge da varsa onları selected yap refresh sonrası veri basma kısmı
-      if (selectedSeatsFromStorage.indexOf(index) > -1) {
+      if (selectedSeatsFromStorage.indexOf(index) > -1) {  // yada includes
         seat.classList.add('selected');
         // seat.classList.toggle('occupied');
       }
@@ -95,3 +103,6 @@ const displayUI = () => {
 }
 
 
+// movieSelectBox.selectedIndex = currentMovieIndex;
+  // .class .class matches any elements of class .class that are descendants of another element with the class .class. ( arada bosluk birakilirsa child element olur ve ikinci yazilan cocuk olur. ve de o secilmis olur)
+  // .class.class matches any element with both classes. (burada ise parent iliskisi olmaz. iki sinif birden secilmis olur)
